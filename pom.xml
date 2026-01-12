@@ -43,6 +43,18 @@
       <artifactId>mariadb-java-client</artifactId>
       <version>3.3.2</version>
     </dependency>
+    <!-- PostgreSQL -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.7.1</version>
+    </dependency>
+    <!-- Oracle -->
+    <dependency>
+      <groupId>com.oracle.database.jdbc</groupId>
+      <artifactId>ojdbc11</artifactId>
+      <version>23.3.0.23.09</version>
+    </dependency>
 
     <!-- Lombok (Optional but good for DTOs) -->
     <dependency>

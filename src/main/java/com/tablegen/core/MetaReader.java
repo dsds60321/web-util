@@ -16,13 +16,58 @@ public class MetaReader {
     }
 
     public List<ColumnMeta> getColumns(String schema, String table) throws SQLException {
+        // Handle "schema.table" notation in table parameter
+        if (table.contains(".")) {
+            String[] parts = table.split("\\.");
+            if (parts.length == 2) {
+                schema = parts[0];
+                table = parts[1];
+            }
+        }
+
+        String dbProductName = connection.getMetaData().getDatabaseProductName().toLowerCase();
         List<ColumnMeta> columns = new ArrayList<>();
-        String sql = """
-            SELECT COLUMN_NAME, COLUMN_TYPE, IS_NULLABLE, COLUMN_KEY, COLUMN_COMMENT, ORDINAL_POSITION
-            FROM information_schema.COLUMNS
-            WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?
-            ORDER BY ORDINAL_POSITION
-        """;
+        String sql;
+
+        if (dbProductName.contains("oracle")) {
+            sql = """
+                SELECT 
+                    t.COLUMN_NAME, 
+                    t.DATA_TYPE as COLUMN_TYPE, 
+                    t.NULLABLE as IS_NULLABLE, 
+                    '' as COLUMN_KEY, 
+                    c.COMMENTS as COLUMN_COMMENT, 
+                    t.COLUMN_ID as ORDINAL_POSITION
+                FROM ALL_TAB_COLUMNS t
+                LEFT JOIN ALL_COL_COMMENTS c 
+                    ON t.OWNER = c.OWNER 
+                    AND t.TABLE_NAME = c.TABLE_NAME 
+                    AND t.COLUMN_NAME = c.COLUMN_NAME
+                WHERE t.OWNER = ? AND t.TABLE_NAME = ?
+                ORDER BY t.COLUMN_ID
+            """;
+        } else if (dbProductName.contains("postgresql")) {
+            sql = """
+                SELECT 
+                    column_name as COLUMN_NAME, 
+                    udt_name as COLUMN_TYPE, 
+                    is_nullable as IS_NULLABLE, 
+                    '' as COLUMN_KEY, 
+                    '' as COLUMN_COMMENT, 
+                    ordinal_position as ORDINAL_POSITION
+                FROM information_schema.columns 
+                WHERE table_schema = ? AND table_name = ? 
+                ORDER BY ordinal_position
+            """;
+        } else {
+            // MySQL, MariaDB (Standard with MySQL extensions like COLUMN_TYPE)
+            sql = """
+                SELECT COLUMN_NAME, COLUMN_TYPE, IS_NULLABLE, COLUMN_KEY, COLUMN_COMMENT, ORDINAL_POSITION
+                FROM information_schema.COLUMNS
+                WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?
+                ORDER BY ORDINAL_POSITION
+            """;
+        }
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, schema);
@@ -30,11 +75,14 @@ public class MetaReader {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
+                    String isNullable = rs.getString("IS_NULLABLE"); // Y/N or YES/NO
+                    boolean nullable = "YES".equalsIgnoreCase(isNullable) || "Y".equalsIgnoreCase(isNullable);
+                    
                     columns.add(new ColumnMeta(
                         rs.getString("COLUMN_NAME"),
                         rs.getString("COLUMN_TYPE"),
-                        "YES".equalsIgnoreCase(rs.getString("IS_NULLABLE")),
-                        "PRI".equalsIgnoreCase(rs.getString("COLUMN_KEY")),
+                        nullable,
+                        "PRI".equalsIgnoreCase(rs.getString("COLUMN_KEY")), // Oracle doesn't return this easily here, might need adjustment if PK is critical
                         rs.getString("COLUMN_COMMENT"),
                         rs.getInt("ORDINAL_POSITION")
                     ));
