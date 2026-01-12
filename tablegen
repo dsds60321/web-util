@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Determine the directory where the script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+JAR_PATH="$SCRIPT_DIR/target/tablegen-1.0-SNAPSHOT.jar"
+
+if [ ! -f "$JAR_PATH" ]; then
+    echo "Error: Jar file not found at $JAR_PATH"
+    echo "Please run 'mvn package' first."
+    exit 1
+fi
+
+java -jar "$JAR_PATH" "$@"

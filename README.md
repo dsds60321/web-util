@@ -24,33 +24,42 @@ CLI(Command Line Interface) 환경과 웹(Spring Boot) 환경을 모두 지원�
 
 ## 🚀 빌드 및 설치
 
-프로젝트 루트 디렉토리에서 아래 명령어를 실행하여 빌드합니다.
+이 프로젝트는 **Maven Profile**을 사용하여 **웹 서버용**과 **CLI 도구용** JAR를 분리하여 빌드할 수 있습니다.
+
+### 1. 웹 서버용 빌드 (기본값)
+스프링 부트 웹 서버를 실행하기 위한 JAR 파일을 생성합니다.
 
 ```bash
 mvn clean package
 ```
+- 생성 파일: `target/tablegen-web.jar`
 
-빌드가 완료되면 `target/tablegen-1.0-SNAPSHOT.jar` 파일이 생성됩니다.
+### 2. CLI 도구용 빌드
+터미널에서 명령어로 실행하기 위한 독립적인 JAR 파일을 생성합니다.
+
+```bash
+mvn clean package -Pcli
+```
+- 생성 파일: `target/tablegen-cli.jar`
 
 ---
 
 ## 💻 사용 방법 (CLI)
 
-CLI 도구는 `com.tablegen.Main` 클래스를 통해 실행됩니다.
+CLI 모드는 `tablegen-cli.jar` 파일을 사용합니다.
 
 ### 1. 인터랙티브 모드 (권장)
-별도의 인자 없이 실행하면 대화형 모드가 시작됩니다.
+인자 없이 실행하면 단계별로 설정을 입력받는 대화형 모드가 시작됩니다.
 
 ```bash
-java -cp target/tablegen-1.0-SNAPSHOT.jar -Dloader.main=com.tablegen.Main org.springframework.boot.loader.launch.PropertiesLauncher
+java -jar target/tablegen-cli.jar
 ```
-*(참고: Spring Boot Fat Jar 구조로 패키징되므로 `PropertiesLauncher`를 사용하여 Main 클래스를 호출해야 합니다. 개발 환경에서는 IDE나 `mvn exec:java`를 사용하는 것이 편리합니다.)*
 
 ### 2. 명령어 인자 모드
-필요한 옵션을 직접 지정하여 실행할 수 있습니다.
+모든 옵션을 명령줄 인자로 전달하여 즉시 실행합니다.
 
 ```bash
-java -cp target/tablegen-1.0-SNAPSHOT.jar -Dloader.main=com.tablegen.Main org.springframework.boot.loader.launch.PropertiesLauncher \
+java -jar target/tablegen-cli.jar \
     --db jdbc:mariadb://localhost:3306/mydb \
     --user root \
     --pass password \
@@ -79,16 +88,17 @@ java -cp target/tablegen-1.0-SNAPSHOT.jar -Dloader.main=com.tablegen.Main org.sp
 
 ## 🌐 사용 방법 (Web)
 
-웹 애플리케이션 모드는 브라우저에서 UI를 통해 코드를 생성할 수 있습니다.
+웹 모드는 `tablegen-web.jar` 파일을 사용합니다.
 
 ### 실행
 
 ```bash
-java -jar target/tablegen-1.0-SNAPSHOT.jar
+java -jar target/tablegen-web.jar
 ```
 
 ### 접속
-브라우저를 열고 `http://localhost:8080` 으로 접속합니다. (포트는 설정에 따라 다를 수 있음)
+브라우저를 열고 아래 주소로 접속합니다.
+- URL: `http://localhost:8080`
 
 ---
 

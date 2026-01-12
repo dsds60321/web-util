@@ -1,0 +1,53 @@
+# =====================
+# Build
+# =====================
+/target/
+*.jar
+*.war
+*.ear
+
+# =====================
+# Logs
+# =====================
+*.log
+logs/
+
+# =====================
+# IDE
+# =====================
+.idea/
+*.iml
+*.iws
+.vscode/
+
+# =====================
+# OS
+# =====================
+.DS_Store
+Thumbs.db
+
+# =====================
+# Maven
+# =====================
+.mvn/wrapper/maven-wrapper.jar
+
+# =====================
+# Spring Boot
+# =====================
+application.yml
+application.properties
+application-*.yml
+application-*.properties
+
+# =====================
+# Env / Secrets
+# =====================
+.env
+.env.*
+
+# =====================
+# Generated files
+# =====================
+/generated/
+/output/
+/GEMINI.md

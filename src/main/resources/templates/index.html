@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">HTML Generator</title>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js (CDN) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        /* Custom scrollbar for table-like lists if needed */
+        .scroller::-webkit-scrollbar { width: 6px; }
+        .scroller::-webkit-scrollbar-thumb { background-color: #e5e7eb; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800" x-data="{ mode: 'table', isLoading: false }">
+
+    <!-- 1. Sticky Header -->
+    <header class="sticky top-0 z-50 bg-white border-b border-gray-200 h-16">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
+            <!-- Left: Logo & Title -->
+            <div class="flex items-center space-x-4">
+                <img th:src="${logo}" alt="Logo" class="h-8 w-8">
+                <span class="text-lg font-bold text-gray-900 tracking-tight" th:text="${title}">관리 시스템</span>
+<!--                <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-700">PRO</span>-->
+            </div>
+
+            <!-- Center: Main Nav -->
+            <nav class="hidden md:flex space-x-8">
+                <a href="#" class="text-gray-900 font-medium text-sm border-b-2 border-blue-600 h-16 flex items-center">HTML 생성</a>
+<!--                <a href="#" class="text-gray-500 hover:text-gray-900 font-medium text-sm h-16 flex items-center transition-colors">기록</a>-->
+<!--                <a href="#" class="text-gray-500 hover:text-gray-900 font-medium text-sm h-16 flex items-center transition-colors">설정</a>-->
+            </nav>
+
+            <!-- Right: Search & User -->
+            <div class="flex items-center space-x-4">
+                <div class="relative hidden lg:block">
+                    <input type="text" placeholder="연결 검색..." class="w-64 pl-9 pr-3 py-1.5 text-sm bg-gray-100 border-none rounded-md text-gray-700 focus:ring-1 focus:ring-blue-500 focus:bg-white transition-all">
+                    <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <div class="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold cursor-pointer">
+                    MA
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. Main Content (3-Column Layout) -->
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Left Column: Quick Access / List (3 cols) -->
+            <aside class="hidden lg:block lg:col-span-3 space-y-6">
+                <!-- Recent Connections Panel -->
+<!--                <div class="bg-white rounded border border-gray-200 shadow-sm overflow-hidden">-->
+<!--                    <div class="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-gray-50">-->
+<!--                        <h3 class="text-sm font-semibold text-gray-700">저장된 연결</h3>-->
+<!--                        <button class="text-xs text-blue-600 hover:text-blue-800 font-medium">편집</button>-->
+<!--                    </div>-->
+<!--                    <ul class="divide-y divide-gray-100 text-sm">-->
+<!--                        <li class="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors group">-->
+<!--                            <div class="flex justify-between">-->
+<!--                                <span class="font-medium text-gray-800 group-hover:text-blue-600">운영_마스터_DB</span>-->
+<!--                                <span class="text-xs text-green-600 font-medium">활성</span>-->
+<!--                            </div>-->
+<!--                            <p class="text-xs text-gray-400 mt-0.5">192.168.0.101 • MySQL</p>-->
+<!--                        </li>-->
+<!--                        <li class="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors group">-->
+<!--                            <div class="flex justify-between">-->
+<!--                                <span class="font-medium text-gray-800 group-hover:text-blue-600">개발_테스트_존</span>-->
+<!--                            </div>-->
+<!--                            <p class="text-xs text-gray-400 mt-0.5">localhost:3306 • MariaDB</p>-->
+<!--                        </li>-->
+<!--                        <li class="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors group">-->
+<!--                            <div class="flex justify-between">-->
+<!--                                <span class="font-medium text-gray-800 group-hover:text-blue-600">분석_KR</span>-->
+<!--                            </div>-->
+<!--                            <p class="text-xs text-gray-400 mt-0.5">10.0.5.20 • Oracle</p>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+
+                <!-- Usage Stats Panel -->
+<!--                <div class="bg-white rounded border border-gray-200 shadow-sm p-4">-->
+<!--                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">시스템 상태</h3>-->
+<!--                    <div class="space-y-3">-->
+<!--                        <div>-->
+<!--                            <div class="flex justify-between text-xs mb-1">-->
+<!--                                <span class="text-gray-600">API 사용량</span>-->
+<!--                                <span class="font-medium text-gray-900">12%</span>-->
+<!--                            </div>-->
+<!--                            <div class="w-full bg-gray-100 rounded-full h-1.5">-->
+<!--                                <div class="bg-blue-500 h-1.5 rounded-full" style="width: 12%"></div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div>-->
+<!--                            <div class="flex justify-between text-xs mb-1">-->
+<!--                                <span class="text-gray-600">DB 지연시간</span>-->
+<!--                                <span class="font-medium text-green-600">45ms</span>-->
+<!--                            </div>-->
+<!--                            <div class="w-full bg-gray-100 rounded-full h-1.5">-->
+<!--                                <div class="bg-green-500 h-1.5 rounded-full" style="width: 85%"></div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </aside>
+
+            <!-- Center Column: Main Generator Form (6 cols -> 9 on desktop if right hidden, but stuck to 6 for 3-col req) -->
+            <!-- Requirement: "main 안에 있는 카드 영역은 전체를 차지하고 있어야해" -> Filling the center column fully -->
+            <main class="col-span-1 lg:col-span-6 space-y-6">
+                
+                <div class="bg-white border border-gray-200 rounded shadow-sm">
+                    <!-- Card Header -->
+                    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                        <h2 class="text-base font-bold text-gray-800 flex items-center">
+                            <span class="w-2 h-2 rounded-full bg-blue-600 mr-2"></span>
+                            새로운 생성 작업
+                        </h2>
+                        <span class="text-xs font-mono text-gray-400">ID: #GEN-2024-001</span>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="p-6">
+                        <form id="genForm" class="space-y-8">
+                            
+                            <!-- 1. Connection Info (Table Layout) -->
+                            <section>
+                                <h3 class="text-sm font-bold text-gray-900 mb-3 uppercase tracking-wide">대상 데이터베이스</h3>
+                                <div class="border border-gray-200 rounded overflow-hidden">
+                                    <table class="w-full text-sm text-left">
+                                        <tbody class="divide-y divide-gray-200">
+                                            <tr class="group hover:bg-gray-50 transition-colors">
+                                                <th class="w-32 bg-gray-50 px-4 py-3 font-medium text-gray-600 border-r border-gray-200">호스트 주소</th>
+                                                <td class="p-2">
+                                                    <input type="text" id="host" name="host" placeholder="예: 127.0.0.1:3306" required 
+                                                        class="w-full bg-transparent border-none focus:ring-0 text-gray-800 placeholder-gray-400 font-mono text-sm">
+                                                </td>
+                                            </tr>
+                                            <tr class="group hover:bg-gray-50 transition-colors">
+                                                <th class="w-32 bg-gray-50 px-4 py-3 font-medium text-gray-600 border-r border-gray-200">스키마 (DB명)</th>
+                                                <td class="p-2">
+                                                    <input type="text" id="database" name="database" placeholder="예: finance_core"
+                                                        class="w-full bg-transparent border-none focus:ring-0 text-gray-800 placeholder-gray-400 font-mono text-sm">
+                                                </td>
+                                            </tr>
+                                            <tr class="group hover:bg-gray-50 transition-colors">
+                                                <th class="w-32 bg-gray-50 px-4 py-3 font-medium text-gray-600 border-r border-gray-200">계정 / 암호</th>
+                                                <td class="p-2 flex space-x-2">
+                                                    <input type="text" name="user" placeholder="사용자명" required 
+                                                        class="w-1/2 bg-gray-50 border border-gray-200 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                                                    <input type="password" name="password" placeholder="비밀번호" 
+                                                        class="w-1/2 bg-gray-50 border border-gray-200 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+
+                            <!-- 2. Mode Selection & Input -->
+                            <section>
+                                <div class="flex justify-between items-end mb-3">
+                                    <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wide">데이터 원본</h3>
+                                    <div class="flex space-x-1 bg-gray-100 p-0.5 rounded">
+                                        <button type="button" @click="mode = 'table'" 
+                                            :class="mode === 'table' ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                            class="px-3 py-1 text-xs font-medium rounded transition-all">단일 테이블</button>
+                                        <button type="button" @click="mode = 'sql'" 
+                                            :class="mode === 'sql' ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                                            class="px-3 py-1 text-xs font-medium rounded transition-all">SQL 쿼리</button>
+                                        <!-- Hidden Inputs for Form Submission -->
+                                        <input type="radio" name="modeSelect" value="table" x-model="mode" class="hidden">
+                                        <input type="radio" name="modeSelect" value="sql" x-model="mode" class="hidden">
+                                    </div>
+                                </div>
+
+                                <div class="border border-gray-200 rounded p-4 bg-white">
+                                    <!-- Table Mode -->
+                                    <div x-show="mode === 'table'">
+                                        <label class="block text-xs font-medium text-gray-500 mb-1">대상 테이블명</label>
+                                        <input type="text" id="tableName" name="tableName" placeholder="스키마.테이블 (예: TR_ORDER_MST)" 
+                                            class="w-full text-lg font-mono text-gray-900 border-b border-gray-300 focus:border-blue-600 focus:ring-0 border-t-0 border-l-0 border-r-0 px-0 py-1 bg-transparent placeholder-gray-300 transition-colors">
+                                        <p class="mt-2 text-xs text-gray-400">스키마에 정의된 정확한 테이블명을 입력하세요.</p>
+                                    </div>
+
+                                    <!-- SQL Mode -->
+                                    <div x-show="mode === 'sql'" style="display: none;">
+                                        <label class="block text-xs font-medium text-gray-500 mb-1">사용자 정의 쿼리 실행</label>
+                                        <textarea id="sqlQuery" name="sqlQuery" rows="5" placeholder="SELECT A.ID, B.NAME AS 'User Name' FROM USERS A JOIN DEPT B ON A.DEPT_ID = B.ID" 
+                                            class="w-full bg-gray-50 border border-gray-200 rounded p-3 font-mono text-sm text-gray-800 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none"></textarea>
+                                        <div class="mt-2 flex justify-between items-center">
+                                            <p class="text-xs text-blue-600 flex items-center">
+                                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                컬럼 별칭(Alias)이 테이블 헤더로 사용됩니다.
+                                            </p>
+                                            <input type="text" id="outputName" name="outputName" placeholder="결과 파일명" class="text-xs border-b border-gray-300 focus:border-blue-500 focus:ring-0 w-32 text-right bg-transparent">
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- 3. Output Options -->
+                            <section class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">템플릿 종류</label>
+                                    <select name="templateType" class="w-full bg-white border border-gray-300 rounded px-3 py-2 text-sm text-gray-700 focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="HTML">정적 HTML</option>
+                                        <option value="THYMELEAF">Thymeleaf</option>
+                                        <option value="MUSTACHE">Mustache</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">필터 (제외할 컬럼)</label>
+                                    <input type="text" name="exclude" placeholder="예: reg_dt, upt_dt" class="w-full bg-white border border-gray-300 rounded px-3 py-2 text-sm text-gray-700 focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                            </section>
+
+                            <!-- 4. Action -->
+                            <div class="pt-4 border-t border-gray-100">
+                                <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-3 rounded shadow-sm transition-transform transform active:scale-[0.99] flex justify-center items-center">
+                                    <span x-show="!isLoading">코드 생성 및 다운로드</span>
+                                    <span x-show="isLoading" class="flex items-center" style="display: none;">
+                                        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        처리 중...
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Result Message (Toast-like) -->
+                <div id="resultArea" class="hidden bg-green-50 border-l-4 border-green-500 p-4 rounded shadow-sm flex justify-between items-center">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-green-800" id="resultMessage">작업이 완료되었습니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="errorArea" class="hidden bg-red-50 border-l-4 border-red-500 p-4 rounded shadow-sm">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                             <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-800">시스템 오류</h3>
+                            <div class="mt-1 text-xs text-red-700" id="errorMessage"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- Right Column: Details / Help (3 cols) -->
+            <aside class="hidden lg:block lg:col-span-3 space-y-6">
+                <!-- Guide Panel -->
+                <div class="bg-white border border-gray-200 rounded shadow-sm p-5">
+                    <h3 class="text-sm font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">플랫폼 이용 가이드</h3>
+                    <ul class="space-y-4 text-sm text-gray-600">
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 h-5 w-5 text-blue-500 flex items-center justify-center font-bold text-xs bg-blue-50 rounded-full mr-3">1</span>
+                            <span><strong>DB 연결 정보</strong>를 정의하세요. 읽기 전용(Read-only) 계정 사용을 권장합니다.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 h-5 w-5 text-blue-500 flex items-center justify-center font-bold text-xs bg-blue-50 rounded-full mr-3">2</span>
+                            <span>단순 생성을 위한 <strong>테이블 모드</strong> 또는 복잡한 조인을 위한 <strong>SQL 쿼리 모드</strong>를 선택하세요.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 h-5 w-5 text-blue-500 flex items-center justify-center font-bold text-xs bg-blue-50 rounded-full mr-3">3</span>
+                            <span>SQL 모드에서는 컬럼 별칭(AS '이름')이 테이블 헤더로 사용됩니다.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Footer-like -->
+                <div class="text-center pt-4">
+                    <p class="text-xs text-gray-400">© Copyright ⓒ 2025 GH all right reserved.</p>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('genForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Alpine interaction for loading state
+            const body = document.querySelector('body');
+            const alpineData = Alpine.$data(body);
+            alpineData.isLoading = true;
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+
+            document.getElementById('resultArea').classList.add('hidden');
+            document.getElementById('errorArea').classList.add('hidden');
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            // Construct JDBC URL
+            const host = data.host.trim();
+            const database = data.database.trim();
+            const dbUrl = `jdbc:mariadb://${host}/${database}`;
+
+            // Prepare Request Body
+            const requestData = {
+                dbUrl: dbUrl,
+                user: data.user,
+                password: data.password,
+                schema: database, 
+                templateType: data.templateType,
+                exclude: data.exclude ? data.exclude.split(',').map(s => s.trim()).filter(s => s.length > 0) : [],
+                only: []
+            };
+
+            const mode = alpineData.mode; // Use Alpine state
+            
+            if (mode === 'table') {
+                if (!data.tableName) {
+                    alert('테이블명을 입력해주세요.');
+                    alpineData.isLoading = false;
+                    btn.disabled = false;
+                    return;
+                }
+                requestData.table = data.tableName;
+            } else {
+                if (!data.sqlQuery) {
+                    alert('SQL 쿼리를 입력해주세요.');
+                    alpineData.isLoading = false;
+                    btn.disabled = false;
+                    return;
+                }
+                requestData.sqlQuery = data.sqlQuery;
+                requestData.table = data.outputName || 'custom_query_result';
+            }
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestData)
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    
+                    const disposition = response.headers.get('Content-Disposition');
+                    let filename = (requestData.table || "output") + ".html";
+                    
+                    if (disposition && disposition.indexOf('attachment') !== -1) {
+                         const filenameRegex = new RegExp("filename[^;=\\n]*=((['\"]).*?\\2|[^;\\n]*)", "i");
+                         const matches = filenameRegex.exec(disposition);
+                         if (matches != null && matches[1]) { 
+                             filename = matches[1].replace(/['"]/g, '');
+                         }
+                    }
+                    
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                    
+                    document.getElementById('resultMessage').innerText = `다운로드 완료: ${filename}`;
+                    document.getElementById('resultArea').classList.remove('hidden');
+                } else {
+                    const errorText = await response.text();
+                    throw new Error(errorText || '서버 오류');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('errorMessage').innerText = error.message;
+                document.getElementById('errorArea').classList.remove('hidden');
+            } finally {
+                alpineData.isLoading = false;
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
