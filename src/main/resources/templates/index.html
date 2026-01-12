@@ -138,10 +138,10 @@
                                                 <th class="w-32 bg-gray-50 px-4 py-3 font-medium text-gray-600 border-r border-gray-200">DB 종류</th>
                                                 <td class="p-2">
                                                     <select id="dbType" name="dbType" class="w-full bg-transparent border-none focus:ring-0 text-gray-800 text-sm font-medium">
-                                                        <option value="mariadb">MariaDB</option>
-                                                        <option value="mysql">MySQL</option>
-                                                        <option value="postgresql">PostgreSQL</option>
-                                                        <option value="oracle">Oracle</option>
+                                                        <option value="mariadb" th:selected="${defaultDbType == 'mariadb'}">MariaDB</option>
+                                                        <option value="mysql" th:selected="${defaultDbType == 'mysql'}">MySQL</option>
+                                                        <option value="postgresql" th:selected="${defaultDbType == 'postgresql'}">PostgreSQL</option>
+                                                        <option value="oracle" th:selected="${defaultDbType == 'oracle'}">Oracle</option>
                                                     </select>
                                                 </td>
                                             </tr>
@@ -149,23 +149,27 @@
                                                 <th class="w-32 bg-gray-50 px-4 py-3 font-medium text-gray-600 border-r border-gray-200">호스트 주소</th>
                                                 <td class="p-2">
                                                     <input type="text" id="host" name="host" placeholder="예: 127.0.0.1:3306" required 
-                                                        class="w-full bg-transparent border-none focus:ring-0 text-gray-800 placeholder-gray-400 font-mono text-sm">
+                                                        class="w-full bg-transparent border-none focus:ring-0 text-gray-800 placeholder-gray-400 font-mono text-sm"
+                                                        th:value="${defaultHost}">
                                                 </td>
                                             </tr>
                                             <tr class="group hover:bg-gray-50 transition-colors">
                                                 <th class="w-32 bg-gray-50 px-4 py-3 font-medium text-gray-600 border-r border-gray-200">스키마 (DB/SID)</th>
                                                 <td class="p-2">
                                                     <input type="text" id="database" name="database" placeholder="예: finance_core 또는 XE"
-                                                        class="w-full bg-transparent border-none focus:ring-0 text-gray-800 placeholder-gray-400 font-mono text-sm">
+                                                        class="w-full bg-transparent border-none focus:ring-0 text-gray-800 placeholder-gray-400 font-mono text-sm"
+                                                        th:value="${defaultSchema}">
                                                 </td>
                                             </tr>
                                             <tr class="group hover:bg-gray-50 transition-colors">
                                                 <th class="w-32 bg-gray-50 px-4 py-3 font-medium text-gray-600 border-r border-gray-200">계정 / 암호</th>
                                                 <td class="p-2 flex space-x-2">
                                                     <input type="text" name="user" placeholder="사용자명" required 
-                                                        class="w-1/2 bg-gray-50 border border-gray-200 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                                                        class="w-1/2 bg-gray-50 border border-gray-200 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                                        th:value="${defaultUser}">
                                                     <input type="password" name="password" placeholder="비밀번호" 
-                                                        class="w-1/2 bg-gray-50 border border-gray-200 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                                                        class="w-1/2 bg-gray-50 border border-gray-200 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                                        th:value="${defaultPass}">
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -220,9 +224,9 @@
                                 <div>
                                     <label class="block text-xs font-bold text-gray-500 uppercase mb-2">템플릿 종류</label>
                                     <select name="templateType" class="w-full bg-white border border-gray-300 rounded px-3 py-2 text-sm text-gray-700 focus:ring-blue-500 focus:border-blue-500">
-                                        <option value="HTML">정적 HTML</option>
-                                        <option value="THYMELEAF">Thymeleaf</option>
-                                        <option value="MUSTACHE">Mustache</option>
+                                        <option value="HTML" th:selected="${defaultTemplate == 'HTML'}">정적 HTML</option>
+                                        <option value="THYMELEAF" th:selected="${defaultTemplate == 'THYMELEAF'}">Thymeleaf</option>
+                                        <option value="MUSTACHE" th:selected="${defaultTemplate == 'MUSTACHE'}">Mustache</option>
                                     </select>
                                 </div>
                                 <div>

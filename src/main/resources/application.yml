@@ -1,0 +1,6 @@
+server:
+  port: 8080
+
+app:
+  title: "웹페이지 유틸"
+  logo: "/img/logo.png"
